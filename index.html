@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convert Text to Color Grid</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .input-container {
+            margin-bottom: 20px;
+        }
+        #userInput {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #convertBtn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .grid {
+            display: grid;
+            gap: 2px;
+            width: 90vw;
+            height: 90vw;
+            max-width: 600px;
+            max-height: 600px;
+        }
+        .cell {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: white;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="input-container">
+        <input type="text" id="userInput" placeholder="Enter your text here">
+        <button id="convertBtn">Convert</button>
+    </div>
+    <div class="grid" id="grid"></div>
+
+    <script>
+        const colorMap = {
+            a: "#FF0000", b: "#0000FF", c: "#FFFF00", d: "#FFA500", e: "#00C957",
+            f: "#8A2BE2", g: "#008080", h: "#FF69B4", i: "#1E90FF", j: "#000080",
+            k: "#32CD32", l: "#9370DB", m: "#FF00FF", n: "#808000", o: "#FFD700",
+            p: "#87CEEB", q: "#800020", r: "#E0115F", s: "#0F52BA", t: "#40E0D0",
+            u: "#FFBF00", v: "#8F00FF", w: "#00FFFF", x: "#EEED09", y: "#9ACD32",
+            z: "#FF4500"
+        };
+
+        function convertTextToColorGrid(text) {
+            const processedText = text.toLowerCase().split('').filter(char => /[a-z]/.test(char));
+            const gridSize = Math.ceil(Math.sqrt(processedText.length));
+            const totalCells = gridSize * gridSize;
+
+            const grid = document.getElementById("grid");
+            grid.innerHTML = ""; // Clear the grid
+            grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+
+            for (let i = 0; i < totalCells; i++) {
+                const cell = document.createElement("div");
+                cell.className = "cell";
+                
+                // Use text repeatedly
+                const charIndex = i % processedText.length;
+                const char = processedText[charIndex];
+                
+                cell.style.backgroundColor = colorMap[char];
+                cell.textContent = char;
+
+                // Use black text for bright background colors
+                if (['c', 'o', 'x', 'y'].includes(char)) {
+                    cell.style.color = 'black';
+                    cell.style.textShadow = 'none';
+                }
+
+                grid.appendChild(cell);
+            }
+        }
+
+        document.getElementById("convertBtn").addEventListener("click", function() {
+            const userInput = document.getElementById("userInput").value;
+            convertTextToColorGrid(userInput);
+        });
+    </script>
+</body>
+</html>
